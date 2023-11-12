@@ -1,3 +1,5 @@
+# blockchain.py
+
 import hashlib
 import time
 
@@ -11,7 +13,7 @@ class Block:
         self.hash = self.calculate_hash()
 
     def calculate_hash(self):
-        data = str(self.index) + self.previous_hash + str(self.timestamp) + str(self.data) + str(self.nonce)
+        data = str(self.index) + str(self.previous_hash) + str(self.timestamp) + str(self.data) + str(self.nonce)
         return hashlib.sha256(data.encode()).hexdigest()
 
     def mine_block(self, difficulty):
@@ -25,7 +27,7 @@ class Blockchain:
         self.difficulty = 4  # Adjust difficulty for Proof of Work
 
     def create_genesis_block(self):
-        return Block(0, "0", int(time.time()), "Genesis Block")
+        return Block(0, "", int(time.time()), "Genesis Block")
 
     def get_latest_block(self):
         return self.chain[-1]

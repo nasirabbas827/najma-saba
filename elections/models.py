@@ -27,6 +27,7 @@ class Vote(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
     election = models.ForeignKey(Election, on_delete=models.CASCADE)
     block_hash = models.CharField(max_length=256, blank=True, null=True)
+    previous_hash = models.CharField(max_length=256, blank=True, null=True)
 
     def __str__(self):
         return f"Vote for {self.candidate.name} by {self.user.username}"

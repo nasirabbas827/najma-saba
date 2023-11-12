@@ -89,6 +89,12 @@ from .blockchain import Blockchain, Block
 import time
 
 
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Election, Candidate, Vote
+from .blockchain import Block, Blockchain  # Assuming you have a blockchain module
+
 @login_required
 def cast_vote(request, election_id, candidate_id):
     election = get_object_or_404(Election, pk=election_id)
@@ -102,14 +108,18 @@ def cast_vote(request, election_id, candidate_id):
     if Vote.objects.filter(user=request.user, election=election).exists():
         return HttpResponse("You have already voted in this election.")  # Simple HttpResponse for already voted case
 
+    # Get the latest vote in the same election to determine the previous hash
+    latest_vote = Vote.objects.filter(election=election).order_by('-id').first()
+    previous_hash = latest_vote.block_hash if latest_vote else None
+
     # Generate a new block for each vote and update the block hash
     block_data = f"{request.user.username}{candidate.name}{election.name}"
-    new_block = Block(len(Blockchain().chain), Blockchain().get_latest_block().hash, int(time.time()), block_data)
+    new_block = Block(len(Blockchain().chain), previous_hash, int(time.time()), block_data)
     new_block.mine_block(Blockchain().difficulty)
     block_hash = new_block.hash
 
     # Save the vote
-    new_vote = Vote.objects.create(user=request.user, election=election, candidate=candidate, block_hash=block_hash)
+    new_vote = Vote.objects.create(user=request.user, election=election, candidate=candidate, block_hash=block_hash, previous_hash=previous_hash)
 
     # Include blockchain information in the response
     response_message = f"Your vote has been cast successfully. The block hash for your vote is: {block_hash}"
