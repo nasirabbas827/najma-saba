@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}View Elections{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center m-3">Available Elections</h1>
+
+        <div class="row">
+            {% for election in elections %}
+                <div class="col-md-4">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ election.name }}</h5>
+                            <p class="card-text">Status: {{ election.status }}</p>
+                            <a href="{% url 'view_candidates' election.id %}" class="btn btn-primary">
+                                View Candidates <i class="fas fa-arrow-circle-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No elections available.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

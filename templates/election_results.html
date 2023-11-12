@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Election Results{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Election Results</h1>
+    
+    {% if election_results_data %}
+      {% for election_data in election_results_data %}
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="text-center mb-3 card-title">{{ election_data.election.name }}</h2>
+            
+            <div class="list-group">
+              {% for candidate, vote_count in election_data.results %}
+                <div class="list-group-item">
+                  <h5 class="mb-1">{{ candidate.name }}</h5>
+                  <p class="mb-1"><strong>Votes:</strong> {{ vote_count }}</p>
+                  {% if candidate.image %}
+                    <img src="{{ candidate.image.url }}" alt="{{ candidate.name }} Image" class="img-fluid mb-3">
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No completed elections to show results.</p>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="text-center">
+                    <img src="./images/vote.jpg" alt="Voting System Logo" class="img-fluid mb-4" id="vote-image">
+                </div>
+                <h1 class="display-4">Welcome to the Electronic Voting System</h1>
+                <p class="lead">Experience the future of secure and transparent voting. Our blockchain-based platform ensures the integrity of every vote cast.</p>
+                {% if not request.user.is_authenticated %}
+                    <div class="text-center">
+                        <a href="{% url 'signup' %}" class="btn btn-primary btn-lg"><i class="fas fa-user-plus"></i> Sign Up</a>
+                        <a href="{% url 'signin' %}" class="btn btn-secondary btn-lg"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+                    </div>
+                {% else %}
+                    <div class="text-center">
+                        <a href="{% url 'view_elections' %}" class="btn btn-success btn-lg"><i class="fas fa-eye"></i> View Elections</a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-vote-yea fa-5x text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #vote-image {
+            height: 200px;
+            border-radius: 10px; /* Add border-radius for rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+        }
+    </style>
+{% endblock %}
